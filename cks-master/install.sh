@@ -16,7 +16,7 @@ sudo apt-mark hold kubelet kubeadm kubectl
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 
-kubeadm init
+sudo kubeadm init --kubernetes-version=1.23.9 --pod-network-cidr=10.244.0.0/16 --cri-socket unix:///run/containerd/containerd.sock
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -24,4 +24,5 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 export KUBECONFIG=/etc/kubernetes/admin.conf
 
-kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+# Deploy Flannel as a network plugin
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
